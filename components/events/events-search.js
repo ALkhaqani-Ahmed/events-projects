@@ -49,6 +49,7 @@ const  EventsSearch = ({onSearch}) => {
       <Button>Find Events</Button>
     </form>
   );
+
 }
 
 
