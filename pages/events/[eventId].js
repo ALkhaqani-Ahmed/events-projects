@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import Head from "next/head";
 
 import { getEventById, getAllEvents } from "../../helpers/api-util";
 import ErrorAlert from "../../components/ui/error-alert";
@@ -19,6 +20,13 @@ function EventDetailPage({ selectedEvent }) {
 
   return (
     <Fragment>
+         <Head>
+        <title>{event.title}</title>
+        <meta
+          name="discription"
+          content={event.description}
+        />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         data={event.data}
