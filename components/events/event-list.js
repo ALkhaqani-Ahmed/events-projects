@@ -5,7 +5,7 @@ import propTypes from "prop-types";
  const EventList = ({items}) => {
   return (
     <ul className={classes.list}>
-      {items.map((event) => (
+      {items?.map((event) => (
         <EventItems
           key={event.id}
           id={event.id}

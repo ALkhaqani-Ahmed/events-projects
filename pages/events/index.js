@@ -1,12 +1,11 @@
-import { getAllEvents } from "../../data/dummy-data";
+import { getAllEvents } from "../../helpers/api-util";
 import EvenetSearch from "../../components/events/events-search";
 import EventList from "../../components/events/event-list";
 import { useRouter } from "next/router";
 
-const AllEventsPage = () => {
+const AllEventsPage = (props) => {
   const router = useRouter();
-
-  const eventsItems = getAllEvents();
+  const { events } = props;
 
   function findEventsHandler(year, month) {
     const fullPath = `/events/${year}/${month}`;
@@ -14,11 +13,20 @@ const AllEventsPage = () => {
   }
   return (
     <>
-       <EvenetSearch onSearch={findEventsHandler} />
-      <EventList items={eventsItems} />
-   
+      <EvenetSearch onSearch={findEventsHandler} />
+      <EventList items={events} />
     </>
   );
 };
+
+export async function getStaticaProps() {
+  const events = await getAllEvents();
+  return {
+    props: {
+      events: events,
+    },
+    revalidate: 60
+  };
+}
 
 export default AllEventsPage;

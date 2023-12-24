@@ -1,34 +1,56 @@
 import { Fragment } from "react";
-import { useRouter } from "next/router";
+
+import { getEventById, getAllEvents } from "../../helpers/api-util";
+import ErrorAlert from "../../components/ui/error-alert";
 import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
 
-import { getEventById } from "../../data/dummy-data";
-
-function EventDetailPage() {
-  const router = useRouter();
-  const eventId = router.query.eventId;
-  const event = getEventById(eventId);
+function EventDetailPage({ selectedEvent }) {
+  const event = selectedEvent;
 
   if (!event) {
-    return <p>No event found!</p>;
+    return (
+      <div className="center">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
     <Fragment>
-      <EventSummary title={event.title}/>
-      <EventLogistics 
-      data={event.data}
-      address={event.location}
-      image={event.image}
-      imageAlt={event.title}
+      <EventSummary title={event.title} />
+      <EventLogistics
+        data={event.data}
+        address={event.location}
+        image={event.image}
+        imageAlt={event.title}
       />
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
     </Fragment>
   );
+}
+
+export async function getStaticaProps(context) {
+  const eventId = context.params.eventId;
+
+  const event = await getEventById(eventId);
+
+  return {
+    selectedEvent: event,
+    revalidate: 30,
+  };
+}
+
+export async function getStaticaPaths() {
+  const evenst = await getFeaturedEvents();
+  const paths = evenst.map((event) => ({ params: { eventId: event.id } }));
+  return {
+    paths: paths,
+    fallback: "blocking",
+  };
 }
 
 export default EventDetailPage;
