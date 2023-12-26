@@ -1,27 +1,29 @@
 export async function getAllEvents() {
-  const response = await fetch(
-    "https://events-project-6e39c-default-rtdb.firebaseio.com/e1/events/e1/evenst.json"
-  );
+  const response = await fetch('https://events-project-6e39c-default-rtdb.firebaseio.com/events.json');
   const data = await response.json();
 
-  const evenst = [];
+  const events = [];
 
   for (const key in data) {
-    evenst.push({
+    events.push({
       id: key,
-      ...data[key],
+      ...data[key]
     });
   }
 
-  return evenst;
+  return events;
 }
+
+
 
 export async function getFeaturedEvents() {
   const allEvents = await getAllEvents();
+  console.log({allEvents});
   return allEvents.filter((event) => event.isFeatured);
 }
 
 export async function getEventById(id) {
+  console.log({id})
   const allEvents = await getAllEvents();
   return allEvents.find((event) => event.id === id);
 }

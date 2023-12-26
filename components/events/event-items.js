@@ -13,7 +13,7 @@ const  EventItems = ({title, image, date, location, id}) => {
     year: "numeric",
   });
 
-  const formattedAAdress = location.replace(", ", "/n");
+  const formattedAAdress = location?.replace(", ", "/n");
   const exploreLink = `/events/${id}`;
   return (
     <li className={classes.item}>

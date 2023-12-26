@@ -15,37 +15,40 @@ function FilteredEventsPage(props) {
 
   const filteredData = router.query.slug;
 
-  const { data, error } = useSWR(
-    "https://events-project-6e39c-default-rtdb.firebaseio.com/e1/events/e1/evenst.json"
-  );
+ const { data, error,isLoading } = useSWR(
+    "https://events-project-6e39c-default-rtdb.firebaseio.com/events.json"
+  ,(url) => fetch(url).then(res => res.json()));
+
+  console.log({error,isLoading});
 
   useEffect(() => {
     if (data) {
-      const evenst = [];
+      const events = [];
 
       for (const key in data) {
-        evenst.push({
+        events.push({
           id: key,
           ...data[key],
         });
       }
-
-      setLoadedEvents(evenst);
+      setLoadedEvents(events);
     }
   }, [data]);
 
   let pageHeadData = (
     <Head>
       <title>Filtered Events</title>
-      <meta name="discription" content={`A list of filtered events`} />
+      <meta name="description" content={`A list of filtered events.`} />
     </Head>
   );
+
   if (!loadedEvents) {
+    console.log({loadedEvents})
     return (
-      <>
+      <Fragment>
         {pageHeadData}
-        <p className="center">Loading...</p>;
-      </>
+        <p className="center">Loading...</p>
+      </Fragment>
     );
   }
 
@@ -59,11 +62,12 @@ function FilteredEventsPage(props) {
     <Head>
       <title>Filtered Events</title>
       <meta
-        name="discription"
-        content={`All events for ${numMonth}/${numYear}`}
+        name="description"
+        content={`All events for ${numMonth}/${numYear}.`}
       />
     </Head>
   );
+
   if (
     isNaN(numYear) ||
     isNaN(numMonth) ||
@@ -79,7 +83,6 @@ function FilteredEventsPage(props) {
         <ErrorAlert>
           <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
-
         <div className="center">
           <Button link="/events">Show All Events</Button>
         </div>
@@ -100,7 +103,7 @@ function FilteredEventsPage(props) {
       <Fragment>
         {pageHeadData}
         <ErrorAlert>
-          <p>No events found for chosen filter!</p>
+          <p>No events found for the chosen filter!</p>
         </ErrorAlert>
         <div className="center">
           <Button link="/events">Show All Events</Button>
@@ -110,6 +113,7 @@ function FilteredEventsPage(props) {
   }
 
   const date = new Date(numYear, numMonth - 1);
+
   return (
     <Fragment>
       {pageHeadData}
